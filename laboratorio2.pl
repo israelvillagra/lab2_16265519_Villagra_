@@ -69,20 +69,18 @@ X = '###### Repositorio'+ LABORATORIO +' ###### \nFecha de creación: '+ FECHACR
 rama actual: '+ RAMA +'
 AUTOR : ' + AUTOR + '
 Archivos en workspace :'+ WORKSPACE_FILES +'\n
-Archivos en index :'+ ALL_INDEX_FILES +'\n
+Archivos en index :'+ ALL_INDEX_FILES +'
 Commits en local Index :'+ COMMIT_INDEX_FILES +'
 Mensaje en Commits en Index :'+ MESSAGE_INDEX_FILES +'\n
-Archivos en Local Repository :'+ LOCALREPOSITORY_FILES +'
-Commits en Local Repository :'+ ALL_LOCALREPOSITORY_FILES +'
+Archivos en Local Repository :'+ ALL_LOCALREPOSITORY_FILES +'
+Commits en Local Repository :'+ COMMIT_LOCALREPOSITORY_FILES +'
 Mensaje en Commits en Local Repository :'+ MESSAGE_LOCALREPOSITORY_FILES +'\n
-Archivos en Remote Repository :'+ ALL_REMOTEREPOSITORY_FILES +'\n
+Archivos en Remote Repository :'+ ALL_REMOTEREPOSITORY_FILES +'
 Commits en Remote Repository :'+ COMMIT_REMOTEREPOSITORY_FILES +'
 Mensaje en Commits en Remote Repository :'+ MESSAGE_REMOTEREPOSITORY_FILES +'\n
 ##### FIN DE REPRESENTACIÓN COMO STRING DEL REPOSITORIO #####'
 .
 %git2String(master,X), write(X).
 
-show_records([]).
-show_records([A|B]) :-
-  format('~w\n',A),
-  show_records(B). 
+%************Región gitPull*********************
+%gitPull(RepoInput, RepoOutput)
