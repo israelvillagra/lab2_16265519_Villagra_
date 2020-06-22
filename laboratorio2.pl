@@ -1,6 +1,30 @@
+%Dominios
+%	repositorio(RAMA,NOMBRE_REPOSITORIO,AUTOR, FECHA,HORA ,LISTA_ZONAS_DE_TRABAJO). symbol
+%	zonasDeTrabajo(ZONAS_DE_TRABAJO) symbol.
+%	flujoZonasDeTrabajo(ZONAS_DE_TRABAJO_INICIO,ZONAS_DE_TRABAJO_FINAL) symbol.
+%   archivosEnZonasDeTrabajo(RAMA,NOMBRE_REPOSITORIO,ZONAS_DE_TRABAJO,LISTA_ARCHIVOS). symbol.
+%   commitEnZonasDeTrabajo(RAMA, NOMBRE_REPOSITORIO,ZONAS_DE_TRABAJO,ARCHIVOS,MENSAJE_DEL_COMMIT). symbol.
 
+%Predicados
+%	git2String(master,X).			        aridad = 2
+%   gitPush(localRepository, RepoOutput).   aridad = 2
+%   gitCommit(index,M,X).                   aridad = 3
+%   gitAdd(W,F,X).                          aridad = 3
+%   gitInit(N,A, R).                        aridad = 3
+%   obtenerArchivos(X,Z,A)                  aridad = 3
 
-%repositorio(Autor, Fecha, Hora, NombreRepo, zonasDeTrabajo[]).
+%Metas
+%	Primarias
+%	    git2String(master,X).			        
+%       gitPush(localRepository, RepoOutput).   
+%       gitCommit(index,M,X).                   
+%       gitAdd(W,F,X).                          
+%       gitInit(N,A, R).
+%	Secundarias
+%		obtenerArchivos(X,Z,A).
+
+%Cláusulas
+% hechos
 
 % Repositorio
 repositorio(master,'LABORATORIO2','Israel Villagra', '02-06-2020','13:57' ,[workspace, index, localRepository, remoteRepository]).
@@ -16,6 +40,11 @@ flujoZonasDeTrabajo(workspace,index).
 flujoZonasDeTrabajo(index,localRepository).
 flujoZonasDeTrabajo(localRepository,remoteRepository).
 
+%Flujo de Cambios Descarga
+flujoZonasDeTrabajoDescarga(index, workspace).
+flujoZonasDeTrabajoDescarga(localRepository, index).
+flujoZonasDeTrabajoDescarga(remoteRepository,localRepository).
+
 % Archivos en Zonas de Trabajo
 archivosEnZonasDeTrabajo(master, 'LABORATORIO2',workspace,['archivo1W.txt','archivo2W.txt','archivo3W.txt','archivo4W.txt','archivo5W.txt']).
 archivosEnZonasDeTrabajo(master, 'LABORATORIO2',index,['archivo1I.txt','archivo2I.txt','archivo3I.txt','archivo4I.txt']).
@@ -24,9 +53,10 @@ archivosEnZonasDeTrabajo(master, 'LABORATORIO2',remoteRepository,['archivo1R.txt
 
 %Commit en Zonas de Trabajo
 commitEnZonasDeTrabajo(master, 'LABORATORIO2',index,['archivo1W.txt','archivo2W.txt','archivo3W.txt'],'Se ha subido tres archivos desde workspace a index').
-commitEnZonasDeTrabajo(master, 'LABORATORIO2',localRepository,['archivo1W.txt','archivo2I.txt'],'Se ha subido dos archivos de workspace a index').
+commitEnZonasDeTrabajo(master, 'LABORATORIO2',localRepository,['archivo1W.txt','archivo2I.txt'],'Se ha subido dos archivos de localRepository a index').
 commitEnZonasDeTrabajo(master, 'LABORATORIO2',remoteRepository,['archivo1W.txt'],'Se ha subido un archivo de localRepository a remoteRepository').
 
+%Reglas
 %************Región gitInit*********************
 gitInit(L,A,V) :- repositorio(_,L,A,_,_,V).
 %gitInit('LABORATORIO2','Israel Villagra', R).
@@ -34,8 +64,6 @@ gitInit(L,A,V) :- repositorio(_,L,A,_,_,V).
 %************Región gitAdd*********************
 %Obtiene los archivos de una zona de trabajo (variables Z), de un repositorio indicador con la (variables X)
 obtenerArchivos(X,Z,A) :- archivosEnZonasDeTrabajo(_,X,Z,A).
-%agregaUltimoElemento(A,[],A).
-%agregaUltimoElemento(W,Z) :- obtenerArchivos(_,W,A),  obtenerArchivos(_,index,B), append(A,B,Z).
 
 %Añade a la lista Z los elementos que se encuentran en la lista I, que provienen de la lista W
 gitAdd(W,I,Z) :- flujoZonasDeTrabajo(W,OTRO), obtenerArchivos(_,OTRO,A), append(A,I,Z).
@@ -83,4 +111,4 @@ Mensaje en Commits en Remote Repository :'+ MESSAGE_REMOTEREPOSITORY_FILES +'\n
 %git2String(master,X), write(X).
 
 %************Región gitPull*********************
-%gitPull(RepoInput, RepoOutput)
+%gitPull(remoteRepository, RepoOutput).
